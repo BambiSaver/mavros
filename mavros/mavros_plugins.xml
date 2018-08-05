@@ -22,7 +22,10 @@
 	</class>
 	<class name="local_position" type="mavros::std_plugins::LocalPositionPlugin" base_class_type="mavros::plugin::PluginBase">
 		<description>Publish FCU local position.</description>
-	</class>
+	</class>        
+        <class name="bambi" type="mavros::std_plugins::BambiPlugin" base_class_type="mavros::plugin::PluginBase">
+                <description>BambiSaver Plugin.</description>
+        </class>
 	<class name="global_position" type="mavros::std_plugins::GlobalPositionPlugin" base_class_type="mavros::plugin::PluginBase">
 		<description>Publish FCU fused global position and raw GPS fix.</description>
 	</class>

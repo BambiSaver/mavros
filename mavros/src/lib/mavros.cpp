@@ -372,7 +372,7 @@ void MavRos::log_connect_change(bool connected)
 
 	/* note: sys_status plugin required */
 	if (connected)
-		ROS_INFO("CON: Got HEARTBEAT, connected. FCU: %s", ap.c_str());
+    ROS_INFO("CON: Got HEARTBEAT ### BAMBI ALIVE ###, connected. FCU: %s", ap.c_str());
 	else
 		ROS_WARN("CON: Lost connection, HEARTBEAT timed out.");
 }

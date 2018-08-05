@@ -45,6 +45,7 @@ add_message_files(
   Waypoint.msg
   WaypointList.msg
   WaypointReached.msg
+  BambiMissionTrigger.msg
 )
 
 add_service_files(
