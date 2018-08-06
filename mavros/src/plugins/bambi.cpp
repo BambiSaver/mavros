@@ -19,8 +19,6 @@
 #include <mavros/mavros_plugin.h>
 #include <mavros_msgs/BambiMissionTrigger.h>
 
-
-
 #include <eigen_conversions/eigen_msg.h>
 
 #include <geometry_msgs/PoseStamped.h>
@@ -37,33 +35,35 @@ namespace std_plugins {
  * and Odometry
  */
 class BambiPlugin : public plugin::PluginBase {
-public:
-  BambiPlugin() : PluginBase(),
-    bambi_nh("~bambi")
-  { }
+ public:
+  BambiPlugin()
+      : PluginBase(),
+        bambi_nh("~bambi") {
+  }
 
-  void initialize(UAS &uas_)
-  {
+  void initialize(UAS &uas_) {
     PluginBase::initialize(uas_);
     ROS_INFO("!!!!!!!!!!!!BAMBI INITIALIZATION!!!!!!!!");
-    mission_trigger = bambi_nh.advertise<mavros_msgs::BambiMissionTrigger>("missionTrigger", 2, false);
+    mission_trigger = bambi_nh.advertise<mavros_msgs::BambiMissionTrigger>(
+        "missionTrigger", 2, false);
   }
 
   Subscriptions get_subscriptions() {
     return {
-           make_handler(&BambiPlugin::handle_mission_trigger)
+      make_handler(&BambiPlugin::handle_mission_trigger)
     };
   }
 
-private:
+ private:
   ros::NodeHandle bambi_nh;
 
   ros::Publisher mission_trigger;
 
-  void handle_mission_trigger(const mavlink::mavlink_message_t *msg, mavlink::common::msg::COMMAND_LONG &command)
-  {
+  void handle_mission_trigger(const mavlink::mavlink_message_t *msg,
+                              mavlink::common::msg::COMMAND_LONG &command) {
     ROS_INFO("BAMBI GOT A MESSAGE!!!!!!!!");
-    ROS_INFO("TARGET (%d, %d) COMMAND_ID: %d", command.target_system, command.target_component, command.command);
+    ROS_INFO("TARGET (%d, %d) COMMAND_ID: %d", command.target_system,
+             command.target_component, command.command);
 
     // only accept 0,1 and 240
     // TODO: change to MYID somehow
@@ -73,22 +73,26 @@ private:
 
     using mavlink::common::MAV_CMD;
 
-    switch(command.command) {
-    // should be MAV_CMD::BAMBI....
-    case 2720:
-      boost::shared_ptr<mavros_msgs::BambiMissionTrigger> mission_trigger_msg = boost::make_shared<mavros_msgs::BambiMissionTrigger>();
 
-      mission_trigger_msg->startStop = true;
-      //mission_trigger->missionBasePoint 3xdouble
-      mission_trigger_msg->startAltitutdeOverGround = 30;
+    auto commandType = static_cast<MAV_CMD>(command.command);
 
-      mission_trigger.publish(mission_trigger_msg);
-      break;
+    switch (commandType) {
+      // should be MAV_CMD::BAMBI....
+      case MAV_CMD::BAMBI_START_STOP_MISSION:
+        boost::shared_ptr<mavros_msgs::BambiMissionTrigger> mission_trigger_msg =
+            boost::make_shared<mavros_msgs::BambiMissionTrigger>();
+
+        mission_trigger_msg->startStop = true;
+        //mission_trigger->missionBasePoint 3xdouble
+        mission_trigger_msg->startAltitutdeOverGround = 30;
+
+        mission_trigger.publish(mission_trigger_msg);
+        break;
     }
   }
 };
-} // namespace std_plugins
-} // namespace mavros
+}  // namespace std_plugins
+}  // namespace mavros
 
 #include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(mavros::std_plugins::BambiPlugin, mavros::plugin::PluginBase)
