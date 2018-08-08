@@ -139,8 +139,9 @@ private:
 	{
 		fix->latitude = msg.lat / 1E7;		// deg
 		fix->longitude = msg.lon / 1E7;		// deg
-		fix->altitude = msg.alt / 1E3 + m_uas->geoid_to_ellipsoid_height(fix);	// in meters
-	}
+        //fix->altitude = msg.alt / 1E3 + m_uas->geoid_to_ellipsoid_height(fix);	// in meters
+        fix->altitude = msg.alt / 1E3;
+    }
 
 	inline void fill_unknown_cov(sensor_msgs::NavSatFix::Ptr fix)
 	{
