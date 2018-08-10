@@ -84,30 +84,18 @@ class BambiPlugin : public plugin::PluginBase {
     auto commandType = static_cast<MAV_CMD>(command.command);
     switch (commandType) {
       case MAV_CMD::BAMBI_START_STOP_MISSION:
-
-        // TODO: decodify from mavlink (msg) command the altitude, target position etc.
-
-//        double lat = 46.452951;
-//        double lon = 11.492170;
-//        uint8_t altitude = 50;
-//        bool startStop = true;
-        
       
-        if (command.param1 == 1.f)
+        if (command.param1 == 1.f){
             mission_trigger_msg->startStop = true;
-
-        if (command.param1 == 0.f)
+        } else if (command.param1 == 0.f) {
             mission_trigger_msg->startStop = false;
+        }
 
-        mission_trigger_msg->latitude  = command.param2;
-        mission_trigger_msg->longitude = command.param3;
+        mission_trigger_msg->latitude  = static_cast<double>(command.param2);
+        mission_trigger_msg->longitude = static_cast<double>(command.param3);
         mission_trigger_msg->altitude = command.param4;
         ROS_INFO("BAMBI PLUGIN in mavros got a mission trigger to %s the mission", mission_trigger_msg->startStop ? "start" : "stop");
 
-//      mission_trigger_msg->startStop = startStop;
-//      mission_trigger_msg->missionBasePoint.latitude = lat;
-//      mission_trigger_msg->missionBasePoint.longitude = lon;
-//      mission_trigger_msg->startAltitutdeOverGround = altitude;
         mission_trigger.publish(mission_trigger_msg);
     break;
 
