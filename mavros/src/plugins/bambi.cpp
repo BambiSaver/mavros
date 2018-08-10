@@ -78,30 +78,40 @@ class BambiPlugin : public plugin::PluginBase {
     
 
 
-    auto commandType = static_cast<MAV_CMD>(command.command);
+    boost::shared_ptr<mavros_msgs::BambiMissionTrigger> mission_trigger_msg =
+        boost::make_shared<mavros_msgs::BambiMissionTrigger>();
 
+    auto commandType = static_cast<MAV_CMD>(command.command);
     switch (commandType) {
-      // should be MAV_CMD::BAMBI....
       case MAV_CMD::BAMBI_START_STOP_MISSION:
-      
+
         // TODO: decodify from mavlink (msg) command the altitude, target position etc.
-      
-        double lat = 46.452951;
-        double lon = 11.492170;
-        uint8_t altitude = 50;
-        bool startStop = true;
+
+//        double lat = 46.452951;
+//        double lon = 11.492170;
+//        uint8_t altitude = 50;
+//        bool startStop = true;
         
       
-        ROS_INFO("BAMBI PLUGIN in mavros got a mission trigger to %s the mission", startStop ? "start" : "stop");
-        boost::shared_ptr<mavros_msgs::BambiMissionTrigger> mission_trigger_msg =
-            boost::make_shared<mavros_msgs::BambiMissionTrigger>();
+        if (command.param1 == 1.f)
+            mission_trigger_msg->startStop = true;
 
-        mission_trigger_msg->startStop = startStop;
-        mission_trigger_msg->missionBasePoint.latitude = lat;
-        mission_trigger_msg->missionBasePoint.longitude = lon;
-        mission_trigger_msg->startAltitutdeOverGround = altitude;
+        if (command.param1 == 0.f)
+            mission_trigger_msg->startStop = false;
 
+        mission_trigger_msg->latitude  = command.param2;
+        mission_trigger_msg->longitude = command.param3;
+        mission_trigger_msg->altitude = command.param4;
+        ROS_INFO("BAMBI PLUGIN in mavros got a mission trigger to %s the mission", mission_trigger_msg->startStop ? "start" : "stop");
+
+//      mission_trigger_msg->startStop = startStop;
+//      mission_trigger_msg->missionBasePoint.latitude = lat;
+//      mission_trigger_msg->missionBasePoint.longitude = lon;
+//      mission_trigger_msg->startAltitutdeOverGround = altitude;
         mission_trigger.publish(mission_trigger_msg);
+    break;
+
+    default:
         break;
     }
   }
