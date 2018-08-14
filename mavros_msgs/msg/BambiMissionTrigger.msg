@@ -9,12 +9,13 @@
 
 
 std_msgs/Header header
-bool startStop   #true:mission start (takeoff), false: mission abort
-
-float64 latitude  # Orthophoto shoot position latitude WGS84
-float64 longitude # Orthophoto shoot position longitude WGS84
-float32 altitude	# Takeoff/RTL altitude in meters, relative to ground
-
+bool startStop                  #true:mission start (takeoff), false: mission abort
+float32 altitudeTakeoff         # Takeoff/RTL altitude in meters, relative to home position
+float32 latitudeOrthophoto      # Orthophoto shoot position latitude (WGS84)
+float32 longitudeOrthophoto     # Orthophoto shoot position longitude (WGS84)
+float32 altitudeOrthophoto      # Orthophoto shhoot position altitude (meters AMSL)
+float32 altitudeScanning        # Scanning altitude (meters over the ground)
+float32 SensorFootprintMinDim   #Sensor Footprint minimum Dimension (in meters)
 
 
 

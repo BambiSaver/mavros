@@ -91,9 +91,18 @@ class BambiPlugin : public plugin::PluginBase {
             mission_trigger_msg->startStop = false;
         }
 
-        mission_trigger_msg->latitude  = static_cast<double>(command.param2);
-        mission_trigger_msg->longitude = static_cast<double>(command.param3);
-        mission_trigger_msg->altitude = command.param4;
+        //forwarding takeoff informations
+        mission_trigger_msg->altitudeTakeoff = command.param2;
+
+        //forwarding Orthophoto informations
+        mission_trigger_msg->latitudeOrthophoto  = command.param3;
+        mission_trigger_msg->longitudeOrthophoto = command.param4;
+        mission_trigger_msg->altitudeOrthophoto = command.param5;
+
+        //forwarding scanning informations
+        mission_trigger_msg->altitudeScanning = command.param6;
+        mission_trigger_msg->SensorFootprintMinDim = command.param7;
+
         ROS_INFO("BAMBI PLUGIN in mavros got a mission trigger to %s the mission", mission_trigger_msg->startStop ? "start" : "stop");
 
         mission_trigger.publish(mission_trigger_msg);
