@@ -103,6 +103,11 @@ class BambiPlugin : public plugin::PluginBase {
         mission_trigger_msg->altitudeScanning = command.param6;
         mission_trigger_msg->SensorFootprintMinDim = command.param7;
 
+        // BUG param5 UNUSABLE for some strange reason 2018/08/14 ==>
+        mission_trigger_msg->SensorFootprintMinDim = 8.0f;
+        mission_trigger_msg->altitudeOrthophoto = command.param7;
+
+
         ROS_INFO("BAMBI PLUGIN in mavros got a mission trigger to %s the mission", mission_trigger_msg->startStop ? "start" : "stop");
 
         mission_trigger.publish(mission_trigger_msg);
